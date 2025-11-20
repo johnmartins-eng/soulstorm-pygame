@@ -8,13 +8,15 @@ class Skeleton(BaseEnemy):
     def __init__(self, x=100, y=50, health=100, base_damage=5, speed=1.5):
         super().__init__(x, y, health, base_damage, speed)
         self.animation_mode = AnimationModeEnum.RUNNING
+        # xp value on death
+        self.xp_value = 10
 
-    
     def load_frames(self):
         # running frames
         for i in range(0, 12):
             name = f"sprite_0{i}.png" if i < 10 else f"sprite_{i}.png"
-            img = pygame.image.load(f"assets/enemies/skeleton/{name}").convert_alpha()
+            img = pygame.image.load(
+                f"assets/enemies/skeleton/{name}").convert_alpha()
             self.frames.append(pygame.transform.scale(img, (50, 70)))
 
     def update_animation(self):
@@ -33,11 +35,15 @@ class Skeleton(BaseEnemy):
         self.frame_count += 1
         self.image = self.frames[self.active_frame]
 
+        # Flip image based on facing direction
+        if not self.facing_right:
+            self.image = pygame.transform.flip(self.image, True, False)
+
     def take_damage(self, amount):
         self.health -= amount
         if self.health <= 0:
             self.kill()
-    
+
     def attack(self, target):
         target.take_damage(self.base_damage)
 
@@ -52,9 +58,13 @@ class Skeleton(BaseEnemy):
         # Move along this normalized vector towards the player at current speed.
         self.rect.x += dx * self.speed
         self.rect.y += dy * self.speed
+        # Update facing direction
+        if dx > 0:
+            self.facing_right = True
+        elif dx < 0:
+            self.facing_right = False
 
     def update(self, target: pygame.sprite.Sprite):
         self.update_animation()
         if target is not None:
             self.go_to_player(target)
-        

@@ -9,29 +9,33 @@ START_POS_Y = 200
 
 PLAYER_SPEED = 5
 
-BASE_RADIUS = 200 # Pixels
+BASE_RADIUS = 200  # Pixels
+
 
 class Player(BaseEntity):
     def __init__(self):
-        super().__init__(x=START_POS_X, y=START_POS_Y, health=200, base_damage=400, speed=3.0)
-        self.base_radius = BASE_RADIUS # Pixels
-        
+        super().__init__(x=START_POS_X, y=START_POS_Y,
+                         health=200, base_damage=400, speed=3.0)
+        self.base_radius = BASE_RADIUS  # Pixels
 
     def load_frames(self):
         # idle frames
         for i in range(0, 6):
-            img = pygame.image.load(f"assets/character/idle/sprite_0{i}.png").convert_alpha()
+            img = pygame.image.load(
+                f"assets/character/idle/sprite_0{i}.png").convert_alpha()
             self.frames.append(pygame.transform.scale(img, (70, 70)))
 
         # running frames
         for i in range(6, 14):
             name = f"sprite_0{i}.png" if i < 10 else f"sprite_{i}.png"
-            img = pygame.image.load(f"assets/character/running/{name}").convert_alpha()
+            img = pygame.image.load(
+                f"assets/character/running/{name}").convert_alpha()
             self.frames.append(pygame.transform.scale(img, (70, 70)))
-        
-        #dying frames
+
+        # dying frames
         for i in range(37, 47):
-            img = pygame.image.load(f"assets/character/dying/sprite_{i}.png").convert_alpha()
+            img = pygame.image.load(
+                f"assets/character/dying/sprite_{i}.png").convert_alpha()
             self.frames.append(pygame.transform.scale(img, (70, 70)))
 
     def update_animation(self):
@@ -54,7 +58,7 @@ class Player(BaseEntity):
                 break
 
         self.frame_count += 1
-        
+
         self.image = self.frames[self.active_frame]
         if not self.facing_right:
             self.image = pygame.transform.flip(self.image, True, False)
@@ -75,7 +79,7 @@ class Player(BaseEntity):
         moving = dx != 0 or dy != 0
 
         if moving:
-            self.animation_mode = AnimationModeEnum.RUNNING 
+            self.animation_mode = AnimationModeEnum.RUNNING
 
             length = math.sqrt(dx * dx + dy * dy)
             dx /= length
@@ -100,20 +104,19 @@ class Player(BaseEntity):
         else:
             self.__handle_input()
             self.update_animation()
-            
-    
+
     def take_damage(self, amount):
         self.health -= amount
         if self.health <= 0 and not self.dying:
             self.animation_mode = AnimationModeEnum.DYING
             self.frame_count = 0
             self.dying = True
-            #TODO: make a screen when player loses.
+            # TODO: make a screen when player loses.
 
     def change_direction(self, dx: int, dy: int):
         if dx == 1 and dy == 0:
             self.direction = DirectionEnum.RIGHT
-        
+
         if dx == -1 and dy == 0:
             self.direction = DirectionEnum.LEFT
 
@@ -134,3 +137,21 @@ class Player(BaseEntity):
 
         if dx == -1 and dy == 1:
             self.direction = DirectionEnum.DIAGONAL_LEFT_UP
+
+    # Experience and Leveling System
+    def add_xp(self, amount):
+        self.current_xp += amount
+        if self.current_xp >= self.xp_to_next_level:
+            self.level_up()
+            return True  # Sinaliza que o jogador subiu de nível
+        return False
+
+    def level_up(self):
+        self.level += 1
+        self.current_xp -= self.xp_to_next_level
+        # Increase XP needed for next level by 20%
+        self.xp_to_next_level = int(self.xp_to_next_level * 1.2)
+
+        self.base_damage += 50
+        print(
+            f"Nível {self.level} alcançado! Dano aumentado para {self.base_damage}")
