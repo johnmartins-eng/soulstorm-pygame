@@ -3,6 +3,7 @@ import random
 import pygame
 from pygame.locals import *
 
+from entities.attacks.simple_attack import SimpleAttack
 from entities.enemies.skeleton import Skeleton
 from entities.projectiles.fire import Fire
 from utils.camera import Camera
@@ -28,6 +29,8 @@ if __name__ == "__main__":
     all_sprites = pygame.sprite.Group()
     enemies = pygame.sprite.Group()
     projectiles = pygame.sprite.Group()
+    attacks = pygame.sprite.Group()
+
 
     player = Player()
     all_sprites.add(player)
@@ -37,6 +40,7 @@ if __name__ == "__main__":
     last_spawn_time = pygame.time.get_ticks()
     last_projectile_spawn = pygame.time.get_ticks()
 
+    app_running = True
     app_running = True
     while app_running:
         clock.tick(FPS)
@@ -49,38 +53,30 @@ if __name__ == "__main__":
         if len(enemies) <= 20:
             if current_time - last_spawn_time >= SPAWN_INTERVAL:
                 last_spawn_time = current_time
-
                 radius = player.base_radius
-
                 offset_x = random.uniform(-radius, radius)
                 offset_y = random.uniform(-radius, radius)
-
                 new_x = player.rect.x + offset_x
                 new_y = player.rect.y + offset_y
-
                 new_skeleton = Skeleton(x=new_x, y=new_y)
                 all_sprites.add(new_skeleton)
                 enemies.add(new_skeleton)
 
-        # projectile spawning (move to player update later)
-        if current_time - last_projectile_spawn >= PROJECTILE_SPAWN_INTERVAL:
-            last_projectile_spawn = current_time
-            fire = Fire(player)
-            all_sprites.add(fire)
-            projectiles.add(fire)
 
-        # colision (move to player or projectile update later)
-        collisions = pygame.sprite.groupcollide(projectiles, enemies, True, False)
-        for projectile, hit_list in collisions.items():
-            for enemy in hit_list:
-                projectile.on_hit(enemy)
+        player.update(attacks, all_sprites)
 
-        all_sprites.update(player)
+        attacks.update(enemies)
+
+        enemies.update(player)
+
         camera.update_position(player)
 
         screen.fill(GRAY)
         screen.blit(background, (-camera.camera_rect.x, -camera.camera_rect.y))
-        for sprite in all_sprites:
+
+        # sort sprites for draw order: low z first, high z last
+        sprites_to_draw = sorted(all_sprites, key=lambda s: (getattr(s, "z", 0), getattr(s, "rect").centery))
+        for sprite in sprites_to_draw:
             screen.blit(sprite.image, camera.apply(sprite))
 
         pygame.display.flip()

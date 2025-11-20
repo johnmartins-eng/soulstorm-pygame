@@ -1,6 +1,7 @@
 import pygame
 import math
 
+from entities.attacks.simple_attack import SimpleAttack
 from entities.base_entity import AnimationModeEnum, BaseEntity
 from utils.direction_enum import DirectionEnum
 
@@ -17,6 +18,11 @@ class Player(BaseEntity):
         super().__init__(x=START_POS_X, y=START_POS_Y,
                          health=200, base_damage=400, speed=3.0)
         self.base_radius = BASE_RADIUS  # Pixels
+
+        self.attack_cooldown = 1400 
+        self.last_attack_time = 0
+
+        self.z = 1
 
     def load_frames(self):
         # idle frames
@@ -96,14 +102,26 @@ class Player(BaseEntity):
 
         self.change_direction(dx, dy)
 
-    def update(self, *args, **kwargs):
+    def __try_auto_attack(self, attacks_group, all_sprites_group):
+        now = pygame.time.get_ticks()
+        if now - self.last_attack_time >= self.attack_cooldown:
+            self.last_attack_time = now
+            attack = SimpleAttack(self)
+            attacks_group.add(attack)
+            all_sprites_group.add(attack)
+
+    def update(self, attacks_group=None, all_sprites_group=None, *args, **kwargs):
         if self.dying:
             self.update_animation()
             if self.frame_count >= 60:
                 self.kill()
-        else:
-            self.__handle_input()
-            self.update_animation()
+            return
+
+        self.__handle_input()
+        self.update_animation()
+
+        if attacks_group is not None and all_sprites_group is not None:
+            self.__try_auto_attack(attacks_group, all_sprites_group)
 
     def take_damage(self, amount):
         self.health -= amount
@@ -143,6 +161,7 @@ class Player(BaseEntity):
         self.current_xp += amount
         if self.current_xp >= self.xp_to_next_level:
             self.level_up()
+            print(self.current_xp)
             return True  # Sinaliza que o jogador subiu de nível
         return False
 
