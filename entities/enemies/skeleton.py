@@ -2,6 +2,7 @@ import math
 import pygame
 from entities.base_entity import AnimationModeEnum
 from entities.enemies.base_enemy import BaseEnemy
+from entities.items.jewel import Jewel
 
 
 class Skeleton(BaseEnemy):
@@ -42,6 +43,9 @@ class Skeleton(BaseEnemy):
     def take_damage(self, amount):
         self.health -= amount
         if self.health <= 0:
+            j = Jewel(self.rect.x, self.rect.y)
+            self.items_group.add(j)
+            self.all_sprites_group.add(j)
             self.kill()
 
     def attack(self, target):
@@ -64,7 +68,9 @@ class Skeleton(BaseEnemy):
         elif dx < 0:
             self.facing_right = False
 
-    def update(self, target: pygame.sprite.Sprite):
+    def update(self, target: pygame.sprite.Sprite, items_group: pygame.sprite.Group = None, all_sprites_group: pygame.sprite.Group =None, *args, **kwargs):
         self.update_animation()
+        self.items_group = items_group
+        self.all_sprites_group = all_sprites_group
         if target is not None:
             self.go_to_player(target)

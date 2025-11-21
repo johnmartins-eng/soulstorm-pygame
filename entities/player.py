@@ -22,7 +22,8 @@ class Player(BaseEntity):
         self.attack_cooldown = 1400 
         self.last_attack_time = 0
 
-        self.z = 1
+        self.current_xp = 0
+        self.xp_to_next_level = 100
 
     def load_frames(self):
         # idle frames
@@ -161,16 +162,13 @@ class Player(BaseEntity):
         self.current_xp += amount
         if self.current_xp >= self.xp_to_next_level:
             self.level_up()
-            print(self.current_xp)
             return True  # Sinaliza que o jogador subiu de nível
         return False
 
     def level_up(self):
-        self.level += 1
-        self.current_xp -= self.xp_to_next_level
         # Increase XP needed for next level by 20%
-        self.xp_to_next_level = int(self.xp_to_next_level * 1.2)
+        self.xp_to_next_level += 100
 
         self.base_damage += 50
         print(
-            f"Nível {self.level} alcançado! Dano aumentado para {self.base_damage}")
+            f"Nível {self.current_xp} alcançado! Dano aumentado para {self.base_damage}")

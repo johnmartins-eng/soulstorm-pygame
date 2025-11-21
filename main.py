@@ -60,6 +60,7 @@ if __name__ == "__main__":
     enemies = pygame.sprite.Group()
     projectiles = pygame.sprite.Group()
     attacks = pygame.sprite.Group()
+    items = pygame.sprite.Group()
 
 
     player = Player()
@@ -127,7 +128,9 @@ if __name__ == "__main__":
 
         attacks.update(enemies)
 
-        enemies.update(player)
+        enemies.update(player, items, all_sprites)
+
+        items.update(player)
 
         camera.update_position(player)
 
