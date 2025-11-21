@@ -134,9 +134,7 @@ if __name__ == "__main__":
         screen.fill(GRAY)
         screen.blit(background, (-camera.camera_rect.x, -camera.camera_rect.y))
 
-        # sort sprites for draw order: low z first, high z last
-        sprites_to_draw = sorted(all_sprites, key=lambda s: (getattr(s, "z", 0), getattr(s, "rect").centery))
-        for sprite in sprites_to_draw:
+        for sprite in all_sprites:
             screen.blit(sprite.image, camera.apply(sprite))
 
         pygame.display.flip()

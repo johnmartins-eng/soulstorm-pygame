@@ -18,7 +18,7 @@ class SimpleAttack(BaseAttack):
         for i in range(0, 4):
             img = pygame.image.load(f"assets/attacks/player/sprite_{i}.png").convert_alpha()
 
-            stretched = pygame.transform.scale(img, (150, 60))
+            stretched = pygame.transform.scale(img, (150, 30))
 
             rotated = pygame.transform.rotate(stretched, -35)
 
