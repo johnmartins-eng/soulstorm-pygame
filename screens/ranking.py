@@ -1,14 +1,14 @@
 import pygame
 import sys
 
-class RankingScreen:
+from screens.base_screen import BaseScreen
+
+class RankingScreen(BaseScreen):
     def __init__(self, screen, width=800, height=600):
+        super().__init__()
         self.screen = screen
         self.width = width
         self.height = height
-        self.font_title = pygame.font.SysFont("arial", 50, True)
-        self.font_text = pygame.font.SysFont("arial", 32)
-        self.font_button = pygame.font.SysFont("arial", 36)
 
     def run(self):
         while True:
@@ -49,7 +49,7 @@ class RankingScreen:
         pygame.draw.rect(self.screen, (90, 90, 90), self.button_rect, border_radius=10)
         pygame.draw.rect(self.screen, (255, 255, 255), self.button_rect, 2, border_radius=10)
 
-        button_text = self.font_button.render("Voltar", True, (255, 255, 255))
+        button_text = self.button_font.render("Voltar", True, (255, 255, 255))
         self.screen.blit(button_text, (
             self.button_rect.centerx - button_text.get_width()//2,
             self.button_rect.centery - button_text.get_height()//2

@@ -22,8 +22,12 @@ class Player(BaseEntity):
         self.attack_cooldown = 1400 
         self.last_attack_time = 0
 
+        self.max_health = 200
+
+        self.level = 1
         self.current_xp = 0
         self.xp_to_next_level = 100
+        self.leveled_up = False
 
     def load_frames(self):
         # idle frames
@@ -53,7 +57,7 @@ class Player(BaseEntity):
             frame_intervals = [0, 10, 20, 30, 40, 50, 60]
             frame_ids = [0, 1, 2, 3, 4, 5]
         elif self.animation_mode == AnimationModeEnum.RUNNING:  # running
-            frame_intervals = [7.5, 15, 22.5, 30, 37.5, 45, 52.5, 60]
+            frame_intervals = [0, 7.5, 15, 22.5, 30, 37.5, 45, 52.5]
             frame_ids = [6, 7, 8, 9, 10, 11, 12]
         elif self.animation_mode == AnimationModeEnum.DYING:
             frame_intervals = [6, 12, 18, 24, 30, 36, 42, 48, 54, 60]
@@ -130,7 +134,6 @@ class Player(BaseEntity):
             self.animation_mode = AnimationModeEnum.DYING
             self.frame_count = 0
             self.dying = True
-            # TODO: make a screen when player loses.
 
     def change_direction(self, dx: int, dy: int):
         if dx == 1 and dy == 0:
@@ -166,9 +169,7 @@ class Player(BaseEntity):
         return False
 
     def level_up(self):
-        # Increase XP needed for next level by 20%
+        self.level += 1 
         self.xp_to_next_level += 100
-
-        self.base_damage += 50
-        print(
-            f"Nível {self.current_xp} alcançado! Dano aumentado para {self.base_damage}")
+        print(f"Level {self.level} reached!")
+        self.leveled_up = True

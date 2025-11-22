@@ -1,12 +1,12 @@
 import pygame
 
-class MainMenu:
+from screens.base_screen import BaseScreen
+
+class MainMenu(BaseScreen):
     def __init__(self, screen, username):
+        super().__init__()
         self.screen = screen
         self.username = username
-
-        self.font_title = pygame.font.Font(None, 80)
-        self.font_small = pygame.font.Font(None, 36)
 
         self.overlay_target_alpha = 180
 
@@ -49,7 +49,7 @@ class MainMenu:
             self.screen.blit(panel, panel_rect.topleft)
 
             # Título
-            title = self.font_title.render("MENU PRINCIPAL", True, (230, 230, 230))
+            title = self.title_font.render("MENU PRINCIPAL", True, (230, 230, 230))
             self.screen.blit(title, title.get_rect(center=(w//2, panel_rect.top + 70)))
 
             # Saudar jogador

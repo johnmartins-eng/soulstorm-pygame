@@ -1,11 +1,12 @@
 import pygame
 
+from screens.base_screen import BaseScreen
 
-class GameOverScreen:
+
+class GameOverScreen(BaseScreen):
     def __init__(self, screen):
+        super().__init__()
         self.screen = screen
-        self.font_big = pygame.font.Font(None, 96)
-        self.font_small = pygame.font.Font(None, 36)
         self.title_color = (220, 50, 50)
         self.outline_color = (0, 0, 0)
         self.overlay_target_alpha = 180

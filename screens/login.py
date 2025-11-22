@@ -1,10 +1,11 @@
 import pygame
 
-class LoginScreen:
+from screens.base_screen import BaseScreen
+
+class LoginScreen(BaseScreen):
     def __init__(self, screen):
+        super().__init__()
         self.screen = screen
-        self.font_title = pygame.font.Font(None, 72)
-        self.font_text = pygame.font.Font(None, 36)
         self.overlay_target_alpha = 180
 
         self.input_active = False
@@ -66,7 +67,7 @@ class LoginScreen:
             self.screen.blit(panel_surf, panel_rect.topleft)
 
             # Título
-            title = self.font_title.render("LOGIN", True, (230, 230, 230))
+            title = self.title_font.render("LOGIN", True, (230, 230, 230))
             self.screen.blit(title, title.get_rect(center=(w//2, panel_rect.top + 70)))
 
             # Caixa de texto

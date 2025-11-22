@@ -1,14 +1,13 @@
 import pygame
 
-class PauseScreen:
+from screens.base_screen import BaseScreen
+
+class PauseScreen(BaseScreen):
     def __init__(self, screen, width, height):
+        super().__init__()
         self.screen = screen
         self.width = width
         self.height = height
-
-        # Fontes no mesmo padrão das outras telas
-        self.title_font = pygame.font.Font(None, 80)
-        self.button_font = pygame.font.Font(None, 45)
 
         # Caixa central (mesmo estilo das suas telas)
         self.panel_rect = pygame.Rect(0, 0, 400, 350)
