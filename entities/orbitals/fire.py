@@ -4,7 +4,7 @@ from entities.orbitals.base_orbital import BaseOrbital
 
 
 class Fire(BaseOrbital):
-    def __init__(self, player, radius=100, speed=0.1, duration=3000, cooldown=2000):
+    def __init__(self, player, radius=100, speed=0.1, duration=1000, cooldown=2000):
         super().__init__(player, speed=0, base_damage=30.0)
 
         self.radius = radius          
