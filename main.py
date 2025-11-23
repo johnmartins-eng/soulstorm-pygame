@@ -14,6 +14,7 @@ from screens.game_over import GameOverScreen
 from screens.login import LoginScreen
 from screens.pause import PauseScreen
 from screens.ranking import RankingScreen
+from data import db
 
 # NEW IMPORT
 from ui.levelup_screen import LevelUpScreen
@@ -39,6 +40,10 @@ if __name__ == "__main__":
         sys.exit()
 
     print("Jogador logado:", username)
+
+    # Initialize database and get/create current user
+    db.init_db()
+    current_user_id = db.get_or_create_user(username) if username else None
 
     # Mostrar menu principal em loop até o jogador escolher iniciar ou sair
     menu = MainMenu(screen, username)
@@ -174,6 +179,13 @@ if __name__ == "__main__":
                 from screens.game_over import GameOverScreen
                 game_over = GameOverScreen(screen)
                 choice = game_over.run()
+
+                # Save player's score (use current_xp as score)
+                try:
+                    if current_user_id is not None:
+                        db.add_score(current_user_id, int(getattr(player, 'current_xp', 0)))
+                except Exception:
+                    pass
 
                 if choice == "retry":
                     # Reset everything and continue playing
