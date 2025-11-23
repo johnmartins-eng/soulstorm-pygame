@@ -15,7 +15,7 @@ from screens.game_over import GameOverScreen
 from screens.login import LoginScreen
 from screens.pause import PauseScreen
 from screens.ranking import RankingScreen
-from data import db
+from database import db
 
 # NEW IMPORT
 from ui.levelup_screen import LevelUpScreen

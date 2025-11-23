@@ -72,10 +72,10 @@ class RankingScreen(BaseScreen):
             self.screen.blit(placeholder, (self.width // 2 - placeholder.get_width() // 2, 300))
         else:
             # area de conteúdo
-            content_top = panel_rect.top + 50
+            content_top = panel_rect.top + 10
             content_left = panel_rect.left + 20
             content_width = panel_rect.width - 40
-            content_height = panel_rect.height - 120
+            content_height = panel_rect.height - 80
 
             row_h = 30
             total_h = len(rows) * row_h
@@ -85,10 +85,6 @@ class RankingScreen(BaseScreen):
                 self.scroll_y = 0
             if self.scroll_y > max_scroll:
                 self.scroll_y = max_scroll
-
-            # header
-            header = self.font_text.render("Top 10", True, (200, 200, 200))
-            self.screen.blit(header, (panel_rect.left + 20, panel_rect.top + 10))
 
             # draw visible rows
             for i, (username, score, ts) in enumerate(rows[:100]):
