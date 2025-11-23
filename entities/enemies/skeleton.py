@@ -55,7 +55,7 @@ class Skeleton(BaseEnemy):
 
     def take_damage(self, amount):
         self.health -= amount
-        if self.health <= 0:
+        if self.health <= 0 and self.dying is False:
             self.animation_mode = AnimationModeEnum.DYING
             self.frame_count = 0
             self.dying = True

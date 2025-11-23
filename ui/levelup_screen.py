@@ -48,24 +48,37 @@ class LevelUpScreen(BaseScreen):
             rect = pygame.Rect(card_x, card_y_pos, card_w, card_h)
             self.card_rects.append(rect)
 
-    def select_option(self, index, player):
+    def select_option(self, index, player, all_sprites, attacks_group, orbitals_group):
         if 0 <= index < len(self.current_choices):
             chosen_upgrade = self.current_choices[index]
-            chosen_upgrade.effect_func(player)
+            
+            chosen_upgrade.effect_func(player, all_sprites, attacks_group, orbitals_group)
+            
             self.is_active = False
             self.current_choices = []
             self.card_rects = []
 
-    def handle_input(self, event, player):
+    def handle_input(self, event, player, all_sprites, attacks_group, orbitals_group):
         if not self.is_active:
             return
 
         if event.type == pygame.MOUSEBUTTONDOWN:
-            if event.button == 1:
+            if event.button == 1: 
                 mouse_pos = pygame.mouse.get_pos()
                 for i, rect in enumerate(self.card_rects):
                     if rect.collidepoint(mouse_pos):
-                        self.select_option(i, player)
+                        self.select_option(i, player, all_sprites, attacks_group, orbitals_group)
+
+        # Keyboard support (optional)
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_1 or event.key == pygame.K_KP1:
+                self.select_option(0, player, all_sprites, attacks_group)
+            elif event.key == pygame.K_2 or event.key == pygame.K_KP2:
+                self.select_option(1, player, all_sprites, attacks_group)
+            elif event.key == pygame.K_3 or event.key == pygame.K_KP3:
+                self.select_option(2, player, all_sprites, attacks_group)
+
+    
 
     def draw_retro_border_rect(self, surface, rect, thickness=4, is_hovered=False):
         outer_color = COLOR_HOVER if is_hovered else COLOR_FRAME_OUTER

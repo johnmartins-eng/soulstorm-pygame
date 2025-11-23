@@ -11,8 +11,7 @@ class SimpleAttack(BaseAttack):
 
         self.active_start = 40  
         self.active_end   = 120
-
-        self.damage_done = False
+        
 
     def load_frames(self):
         for i in range(0, 4):

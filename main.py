@@ -7,7 +7,6 @@ from pygame.locals import *
 # --- IMPORTS ---
 from entities.attacks.simple_attack import SimpleAttack
 from entities.enemies.skeleton import Skeleton
-from entities.projectiles.fire import Fire
 from screens.main_menu import MainMenu
 from ui.hud import HUD
 from utils.camera import Camera
@@ -72,6 +71,7 @@ if __name__ == "__main__":
     projectiles = pygame.sprite.Group()
     attacks = pygame.sprite.Group()
     items = pygame.sprite.Group()
+    orbitals = pygame.sprite.Group()
 
     player = Player()
     all_sprites.add(player)
@@ -97,7 +97,7 @@ if __name__ == "__main__":
                 app_running = False
 
             if level_up_screen.is_active:
-                level_up_screen.handle_input(event, player)
+                level_up_screen.handle_input(event, player, all_sprites, attacks, orbitals)
                 continue
 
             if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
@@ -159,6 +159,7 @@ if __name__ == "__main__":
             attacks.update(enemies)
             enemies.update(player, items, all_sprites)
             items.update(player)
+            orbitals.update(enemies)
 
             if player.leveled_up:
                 level_up_screen.generate_choices()

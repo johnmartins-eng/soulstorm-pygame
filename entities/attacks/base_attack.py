@@ -23,6 +23,8 @@ class BaseAttack(pygame.sprite.Sprite, ABC):
         self.frame_count: float = 0
         self.active_frame: int = 0
 
+        self.damage_done = False
+
         self.load_frames()
 
         if self.frames:

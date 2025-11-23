@@ -7,13 +7,12 @@ from entities.player import Player
 from utils.direction_enum import DirectionEnum
 
 
-class BaseProjectile(pygame.sprite.Sprite, ABC):
-    def __init__(self, player: Player, speed: float):
+class BaseOrbital(pygame.sprite.Sprite, ABC):
+    def __init__(self, player: Player, speed: float, base_damage: float):
         super().__init__()
-        self.x = player.rect.x
-        self.y = player.rect.y
+        self.player = player
         self.speed = speed
-        self.base_damage = player.base_damage
+        self.base_damage = base_damage
         self.direction = player.direction
 
         self.frames: list[pygame.Surface] = []
@@ -25,13 +24,15 @@ class BaseProjectile(pygame.sprite.Sprite, ABC):
 
         self.load_frames()
 
+        self.damage_done = False
+
         if self.frames:
             self.image = self.frames[0]
-            self.rect = self.image.get_rect(topleft=(self.x, self.y))
+            self.rect = self.image.get_rect(topleft=(self.player.rect.x, self.player.rect.y))
         else:
             self.image = pygame.Surface((50, 50))
             self.image.fill((255, 0, 255))
-            self.rect = self.image.get_rect(topleft=(self.x, self.y))
+            self.rect = self.image.get_rect(topleft=(self.player.rect.x, self.player.rect.y))
 
     
     def on_hit(self, target: BaseEntity):
