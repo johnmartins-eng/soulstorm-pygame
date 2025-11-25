@@ -36,5 +36,5 @@ def effect_health(game_context):
 UPGRADE_POOL = [
     UpgradeData("Might I", "Increases base damage by 50.", effect_might, "assets/icons/might.png"),
     UpgradeData("Fire Ring", "A spinning fire that circles you.", effect_fire_circle, "assets/icons/fire_ring.png"),
-    UpgradeData("Health Potion", "Heals 30% of HP.", effect_health, "assets/icons/potion_regen_life.png"),
+    UpgradeData("Heal", "Heals 30% of HP.", effect_health, "assets/icons/potion_regen_life.png"),
 ]
