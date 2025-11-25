@@ -16,7 +16,7 @@ BASE_RADIUS = 200  # Pixels
 
 class Player(BaseEntity):
     def __init__(self):
-        super().__init__(x=START_POS_X, y=START_POS_Y, health=200, base_damage=400, speed=3.0, assets=[])
+        super().__init__(x=START_POS_X, y=START_POS_Y, health=200, base_damage=100, speed=3.0, assets=[])
         self.base_radius = BASE_RADIUS  # Pixels
 
         self.attack_cooldown = 1400 

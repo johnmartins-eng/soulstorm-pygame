@@ -9,12 +9,13 @@ from utils.game_context import GameContext
 KNOCKBACK_VALUE = 1
 
 class Skeleton(BaseEnemy):
-    def __init__(self, x=100, y=50, assets=[], health=100, base_damage=5, speed=1.5):
+    def __init__(self, x=0, y=0, player_level=1, assets=[], health=50, base_damage=5, speed=1.5):
         super().__init__(x, y, health, base_damage, speed, assets)
         self.animation_mode = AnimationModeEnum.RUNNING
         # xp value on death
         self.xp_value = 10
         self.stop_walking = False
+        self.health *= player_level
 
     def load_frames(self):
         self.frames = self.assets

@@ -135,15 +135,15 @@ if __name__ == "__main__":
         if not level_up_screen.is_active:
             
             # A. Spawning Logic
-            if len(game_context.enemies) <= 20:
-                if current_time - last_spawn_time >= SPAWN_INTERVAL:
+            if len(game_context.enemies) <= (20 * player.level):
+                if current_time - last_spawn_time >= SPAWN_INTERVAL/(1 + player.level/10):
                     last_spawn_time = current_time
                     radius = player.base_radius
                     offset_x = random.uniform(-radius, radius)
                     offset_y = random.uniform(-radius, radius)
                     new_x = player.rect.x + offset_x
                     new_y = player.rect.y + offset_y
-                    new_skeleton = Skeleton(x=new_x, y=new_y, assets=assets.get_images("skeleton"))
+                    new_skeleton = Skeleton(x=new_x, y=new_y, player_level=player.level, assets=assets.get_images("skeleton"))
                     game_context.all_sprites.add(new_skeleton)
                     game_context.enemies.add(new_skeleton)
 
