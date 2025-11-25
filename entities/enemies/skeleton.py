@@ -4,9 +4,11 @@ from entities.base_entity import AnimationModeEnum
 from entities.enemies.base_enemy import BaseEnemy
 from entities.items.jewel import Jewel
 from utils.game_context import GameContext
+import config
 
 
 KNOCKBACK_VALUE = 1
+
 
 class Skeleton(BaseEnemy):
     def __init__(self, x=0, y=0, player_level=1, assets=[], health=50, base_damage=5, speed=1.5):
@@ -20,7 +22,6 @@ class Skeleton(BaseEnemy):
     def load_frames(self):
         self.frames = self.assets
 
-
     def update_animation(self):
         if self.frame_count >= 60:
             self.frame_count = 0
@@ -32,12 +33,14 @@ class Skeleton(BaseEnemy):
             frame_indexes = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
 
         if self.animation_mode == AnimationModeEnum.DYING:
-            frame_intervals = [4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44, 48, 52, 56, 60]
-            frame_indexes = [12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26]
+            frame_intervals = [4, 8, 12, 16, 20, 24,
+                               28, 32, 36, 40, 44, 48, 52, 56, 60]
+            frame_indexes = [12, 13, 14, 15, 16, 17,
+                             18, 19, 20, 21, 22, 23, 24, 25, 26]
 
         if self.animation_mode == AnimationModeEnum.ONHIT:
-           frame_intervals = [7.5, 15, 22.5, 30, 37.5, 45, 52.5, 60]
-           frame_indexes = [27, 28, 29, 30, 31, 32, 33, 34]
+            frame_intervals = [7.5, 15, 22.5, 30, 37.5, 45, 52.5, 60]
+            frame_indexes = [27, 28, 29, 30, 31, 32, 33, 34]
 
         for i in range(len(frame_intervals) - 1):
             if frame_intervals[i] <= self.frame_count < frame_intervals[i + 1]:
@@ -50,7 +53,6 @@ class Skeleton(BaseEnemy):
         # Flip image based on facing direction
         if not self.facing_right:
             self.image = pygame.transform.flip(self.image, True, False)
-        
 
     def take_damage(self, amount):
         self.health -= amount
@@ -66,7 +68,6 @@ class Skeleton(BaseEnemy):
                 self.rect.x -= KNOCKBACK_VALUE
             elif self.facing_right == False:
                 self.rect.x += KNOCKBACK_VALUE
-            
 
     def attack(self, target):
         target.take_damage(self.base_damage)
@@ -81,8 +82,12 @@ class Skeleton(BaseEnemy):
                 return
             dx, dy = dx / dist, dy / dist  # Normalize.
             # Move along this normalized vector towards the player at current speed.
-            self.rect.x += dx * self.speed
-            self.rect.y += dy * self.speed
+            new_x = self.rect.x + dx * self.speed
+            new_y = self.rect.y + dy * self.speed
+            max_x = max(0, config.WORLD_WIDTH - self.rect.width)
+            max_y = max(0, config.WORLD_HEIGHT - self.rect.height)
+            self.rect.x = int(max(0, min(new_x, max_x)))
+            self.rect.y = int(max(0, min(new_y, max_y)))
             # Update facing direction
             if dx > 0:
                 self.facing_right = True
@@ -98,7 +103,7 @@ class Skeleton(BaseEnemy):
                 self.all_sprites_group.add(j)
                 self.kill()
             return
-            
+
         self.update_animation()
         self.items_group = game_context.items
         self.all_sprites_group = game_context.all_sprites

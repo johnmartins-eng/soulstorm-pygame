@@ -10,3 +10,7 @@ SPAWN_INTERVAL = 1500
 PLAYER_SPEED = 5
 PLAYER_START_HP = 200
 BASE_DAMAGE = 400
+
+# World (background) size in pixels - used to clamp camera and entity movement
+WORLD_WIDTH = 1600
+WORLD_HEIGHT = 1600

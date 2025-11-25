@@ -5,6 +5,7 @@ from entities.attacks.simple_attack import SimpleAttack
 from entities.base_entity import AnimationModeEnum, BaseEntity
 from utils.direction_enum import DirectionEnum
 from utils.game_context import GameContext
+import config
 
 START_POS_X = 400
 START_POS_Y = 200
@@ -16,10 +17,11 @@ BASE_RADIUS = 200  # Pixels
 
 class Player(BaseEntity):
     def __init__(self):
-        super().__init__(x=START_POS_X, y=START_POS_Y, health=200, base_damage=100, speed=3.0, assets=[])
+        super().__init__(x=START_POS_X, y=START_POS_Y,
+                         health=200, base_damage=100, speed=3.0, assets=[])
         self.base_radius = BASE_RADIUS  # Pixels
 
-        self.attack_cooldown = 1400 
+        self.attack_cooldown = 1400
         self.last_attack_time = 0
 
         self.max_health = 200
@@ -96,8 +98,13 @@ class Player(BaseEntity):
             length = math.sqrt(dx * dx + dy * dy)
             dx /= length
             dy /= length
-            self.rect.x += dx * self.speed
-            self.rect.y += dy * self.speed
+            # compute new position then clamp to world bounds
+            new_x = self.rect.x + dx * self.speed
+            new_y = self.rect.y + dy * self.speed
+            max_x = max(0, config.WORLD_WIDTH - self.rect.width)
+            max_y = max(0, config.WORLD_HEIGHT - self.rect.height)
+            self.rect.x = int(max(0, min(new_x, max_x)))
+            self.rect.y = int(max(0, min(new_y, max_y)))
 
             if dx > 0:
                 self.facing_right = True
@@ -127,7 +134,8 @@ class Player(BaseEntity):
         self.update_animation()
 
         if game_context.attacks is not None and game_context.all_sprites is not None:
-            self.__try_auto_attack(game_context.attacks, game_context.all_sprites)
+            self.__try_auto_attack(game_context.attacks,
+                                   game_context.all_sprites)
 
     def take_damage(self, amount):
         self.health -= amount
@@ -171,7 +179,7 @@ class Player(BaseEntity):
         return False
 
     def level_up(self):
-        self.level += 1 
+        self.level += 1
         self.current_xp -= self.xp_to_next_level
         self.xp_to_next_level += 100
         print(f"Level {self.level} reached!")
