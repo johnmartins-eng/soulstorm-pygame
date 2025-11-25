@@ -43,7 +43,7 @@ class SimpleAttack(BaseAttack):
 
         self.mask = pygame.mask.from_surface(self.image)
 
-    def update(self, enemies, *args, **kwargs):
+    def update(self, enemies: pygame.sprite.Group, *args, **kwargs):
         self.update_animation()
         offset_x = 70 if self.player.facing_right else -70
         offset_y = -5

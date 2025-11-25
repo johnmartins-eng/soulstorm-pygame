@@ -38,10 +38,8 @@ class Skeleton(BaseEnemy):
             frame_indexes = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
 
         if self.animation_mode == AnimationModeEnum.DYING:
-            frame_intervals = [4, 8, 12, 16, 20, 24,
-                               28, 32, 36, 40, 44, 48, 52, 56, 60]
-            frame_indexes = [12, 13, 14, 15, 16, 17,
-                             18, 19, 20, 21, 22, 23, 24, 25, 26]
+            frame_intervals = [4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44, 48, 52, 56, 60]
+            frame_indexes = [12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26]
 
         if self.animation_mode == AnimationModeEnum.ONHIT:
            frame_intervals = [3.75, 7.5, 11.25, 15, 18.75, 22.5, 26.5, 30]
@@ -74,7 +72,7 @@ class Skeleton(BaseEnemy):
             elif self.facing_right == False:
                 self.rect.x += KNOCKBACK_VALUE
 
-    def attack(self, target):
+    def attack(self, target: pygame.sprite.Sprite):
         target.take_damage(self.base_damage)
 
     def __go_to_player(self, target: pygame.sprite.Sprite):

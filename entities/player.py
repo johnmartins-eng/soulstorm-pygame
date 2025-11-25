@@ -170,7 +170,7 @@ class Player(BaseEntity):
             self.direction = DirectionEnum.DIAGONAL_LEFT_UP
 
     # Experience and Leveling System
-    def add_xp(self, amount):
+    def add_xp(self, amount: int):
         self.current_xp += amount
         self.total_xp += amount
         if self.current_xp >= self.xp_to_next_level:

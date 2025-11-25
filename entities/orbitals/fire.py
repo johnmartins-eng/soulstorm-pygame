@@ -38,7 +38,7 @@ class Fire(BaseOrbital):
         self.image = self.frames[self.active_frame]
 
     
-    def update(self, enemies, *args, **kwargs):
+    def update(self, enemies: pygame.sprite.Group, *args, **kwargs):
         current_time = pygame.time.get_ticks()
         elapsed = current_time - self.timer_start
 
