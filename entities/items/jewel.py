@@ -8,9 +8,9 @@ class Jewel(pygame.sprite.Sprite):
         self.y = enemie_y
         self.image: pygame.Surface = pygame.transform.scale(pygame.image.load(f"assets/items/Jewel.png").convert_alpha(), (25,25))
         self.rect: pygame.Rect = self.image.get_rect(topleft=(self.x, self.y))
-        self.xp = 10
+        self.__xp = 10
 
     def update(self, player, *args, **kwargs):
         if self.rect.colliderect(player):
-            player.add_xp(self.xp)
+            player.add_xp(self.__xp)
             self.kill()
