@@ -25,13 +25,13 @@ SCREEN_HEIGHT = 600
 GRAY = (100, 100, 100)
 FPS = 60
 
-SPAWN_INTERVAL = 1500  
-PROJECTILE_SPAWN_INTERVAL = 2000  
+SPAWN_INTERVAL = 1500
+PROJECTILE_SPAWN_INTERVAL = 2000
 
 if __name__ == "__main__":
     pygame.init()
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-    
+
     login = LoginScreen(screen)
     status, username = login.run()
 
@@ -57,7 +57,8 @@ if __name__ == "__main__":
             ranking_screen = RankingScreen(screen)
             ranking_choice = ranking_screen.run()
             if ranking_choice == "quit":
-                pygame.quit(); sys.exit()
+                pygame.quit()
+                sys.exit()
             # ao retornar do ranking, reexibe o menu
             continue
 
@@ -69,20 +70,20 @@ if __name__ == "__main__":
 
     pygame.display.set_caption("NoName")
     clock = pygame.time.Clock()
-    
+
     background = pygame.image.load("assets/backgrounds/bg.png").convert()
     background = pygame.transform.scale(background, (1600, 1600))
 
     player = Player()
     game_context.add_player(player)
-    
+
     level_up_screen: LevelUpScreen = LevelUpScreen(SCREEN_WIDTH, SCREEN_HEIGHT)
 
     last_spawn_time = pygame.time.get_ticks()
     last_projectile_spawn = pygame.time.get_ticks()
 
     app_running = True
-    
+
     # --- MAIN GAME LOOP ---
     while app_running:
         clock.tick(FPS)
@@ -97,43 +98,47 @@ if __name__ == "__main__":
                 continue
 
             if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-                    pause = PauseScreen(screen, SCREEN_WIDTH, SCREEN_HEIGHT)
-                    result = pause.run()
+                pause = PauseScreen(screen, SCREEN_WIDTH, SCREEN_HEIGHT)
+                result = pause.run()
 
-                    if result == "quit":
-                        pygame.quit(); sys.exit()
+                if result == "quit":
+                    pygame.quit()
+                    sys.exit()
 
-                    if result == "resume":
-                        # volta ao jogo
-                        pass
+                if result == "resume":
+                    # volta ao jogo
+                    pass
 
-                    if result == "menu":
-                        # abrir menu principal (loop) e tratar opções
-                        menu = MainMenu(screen, username)
-                        while True:
-                            menu_choice = menu.run()
-                            if menu_choice == "quit":
-                                pygame.quit(); sys.exit()
-                            if menu_choice == "ranking":
-                                ranking_screen = RankingScreen(screen)
-                                ranking_choice = ranking_screen.run()
-                                if ranking_choice == "quit":
-                                    pygame.quit(); sys.exit()
-                                continue
-                            if menu_choice == "start":
-                                # RESET GAME
-                                game_context.reset()
-                                player = Player()
-                                game_context.add_player(player)
-                                level_up_screen = LevelUpScreen(SCREEN_WIDTH, SCREEN_HEIGHT)
-                                break
-                        # continue the main loop with the new/reset state
-                        continue
+                if result == "menu":
+                    # abrir menu principal (loop) e tratar opções
+                    menu = MainMenu(screen, username)
+                    while True:
+                        menu_choice = menu.run()
+                        if menu_choice == "quit":
+                            pygame.quit()
+                            sys.exit()
+                        if menu_choice == "ranking":
+                            ranking_screen = RankingScreen(screen)
+                            ranking_choice = ranking_screen.run()
+                            if ranking_choice == "quit":
+                                pygame.quit()
+                                sys.exit()
+                            continue
+                        if menu_choice == "start":
+                            # RESET GAME
+                            game_context.reset()
+                            player = Player()
+                            game_context.add_player(player)
+                            level_up_screen = LevelUpScreen(
+                                SCREEN_WIDTH, SCREEN_HEIGHT)
+                            break
+                    # continue the main loop with the new/reset state
+                    continue
 
         # 2. UPDATE PHASE
         # Only update game logic if we are NOT choosing an upgrade
         if not level_up_screen.is_active:
-            
+
             # A. Spawning Logic
             if len(game_context.enemies) <= (20 * player.level):
                 if current_time - last_spawn_time >= SPAWN_INTERVAL/(1 + player.level/10):
@@ -143,7 +148,8 @@ if __name__ == "__main__":
                     offset_y = random.uniform(-radius, radius)
                     new_x = player.rect.x + offset_x
                     new_y = player.rect.y + offset_y
-                    new_skeleton = Skeleton(x=new_x, y=new_y, player_level=player.level, assets=assets.get_images("skeleton"))
+                    new_skeleton = Skeleton(
+                        x=new_x, y=new_y, player_level=player.level, assets=assets.get_images("skeleton"))
                     game_context.all_sprites.add(new_skeleton)
                     game_context.enemies.add(new_skeleton)
 
@@ -162,7 +168,8 @@ if __name__ == "__main__":
 
         # 3. DRAW PHASE
         screen.fill(GRAY)
-        screen.blit(background, (-game_context.camera.camera_rect.x, -game_context.camera.camera_rect.y))
+        screen.blit(background, (-game_context.camera.camera_rect.x, -
+                    game_context.camera.camera_rect.y))
 
         for sprite in game_context.all_sprites:
             screen.blit(sprite.image, game_context.camera.apply(sprite))
@@ -176,50 +183,54 @@ if __name__ == "__main__":
             level_up_screen.draw(screen)
 
         if not player.alive():
-                from screens.game_over import GameOverScreen
-                game_over = GameOverScreen(screen)
-                choice = game_over.run()
+            from screens.game_over import GameOverScreen
+            game_over = GameOverScreen(screen)
+            choice = game_over.run()
 
-                # Save player's score (use current_xp as score)
-                try:
-                    if current_user_id is not None:
-                        db.add_score(current_user_id, int(getattr(player, 'total_xp ', 0)))
-                except Exception:
-                    pass
+            # Save player's score (use current_xp as score)
+            try:
+                if current_user_id is not None:
+                    db.add_score(current_user_id, int(
+                        getattr(player, 'total_xp', 0)))
+            except Exception:
+                pass
 
-                if choice == "retry":
-                    # Reset everything and continue playing
-                    game_context.reset()
-                    player = Player()
-                    game_context.add_player(player)
-                    level_up_screen.is_active = False
-                    continue
+            if choice == "retry":
+                # Reset everything and continue playing
+                game_context.reset()
+                player = Player()
+                game_context.add_player(player)
+                level_up_screen.is_active = False
+                continue
 
-                if choice == "menu":
-                    # Voltar ao menu principal (loop) e tratar opções
-                    menu = MainMenu(screen, username)
-                    while True:
-                        menu_choice = menu.run()
-                        if menu_choice == "quit":
-                            pygame.quit(); sys.exit()
-                        if menu_choice == "ranking":
-                            ranking_screen = RankingScreen(screen)
-                            ranking_choice = ranking_screen.run()
-                            if ranking_choice == "quit":
-                                pygame.quit(); sys.exit()
-                            continue
-                        if menu_choice == "start":
-                            # Reset game and resume
-                            game_context.reset()
-                            player = Player()
-                            game_context.add_player(player)
-                            level_up_screen.is_active = False
-                            break
-                    # after returning from menu, continue main loop with new state
-                    continue
+            if choice == "menu":
+                # Voltar ao menu principal (loop) e tratar opções
+                menu = MainMenu(screen, username)
+                while True:
+                    menu_choice = menu.run()
+                    if menu_choice == "quit":
+                        pygame.quit()
+                        sys.exit()
+                    if menu_choice == "ranking":
+                        ranking_screen = RankingScreen(screen)
+                        ranking_choice = ranking_screen.run()
+                        if ranking_choice == "quit":
+                            pygame.quit()
+                            sys.exit()
+                        continue
+                    if menu_choice == "start":
+                        # Reset game and resume
+                        game_context.reset()
+                        player = Player()
+                        game_context.add_player(player)
+                        level_up_screen.is_active = False
+                        break
+                # after returning from menu, continue main loop with new state
+                continue
 
-                # any other response -> quit
-                pygame.quit(); sys.exit()
+            # any other response -> quit
+            pygame.quit()
+            sys.exit()
 
         pygame.display.flip()
 
