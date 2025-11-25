@@ -68,7 +68,7 @@ if __name__ == "__main__":
     assets: AssetsManager = AssetsManager.get_instance()
     game_context: GameContext = GameContext()
 
-    pygame.display.set_caption("NoName")
+    pygame.display.set_caption("Soulstorm")
     clock = pygame.time.Clock()
 
     background = pygame.image.load("assets/backgrounds/bg.png").convert()
@@ -129,8 +129,7 @@ if __name__ == "__main__":
                             game_context.reset()
                             player = Player()
                             game_context.add_player(player)
-                            level_up_screen = LevelUpScreen(
-                                SCREEN_WIDTH, SCREEN_HEIGHT)
+                            level_up_screen = LevelUpScreen(SCREEN_WIDTH, SCREEN_HEIGHT)
                             break
                     # continue the main loop with the new/reset state
                     continue
