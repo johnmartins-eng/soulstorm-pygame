@@ -7,8 +7,8 @@ from utils.direction_enum import DirectionEnum
 from utils.game_context import GameContext
 import config
 
-START_POS_X = 400
-START_POS_Y = 200
+START_POS_X = 800
+START_POS_Y = 800
 
 PLAYER_SPEED = 5
 
